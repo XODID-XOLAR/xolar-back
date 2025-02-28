@@ -3,10 +3,13 @@ package com.xodid.xolar.solarpanel.service;
 import com.xodid.xolar.global.config.MQTTConfig;
 import com.xodid.xolar.solarpanel.domain.EmergencyStatus;
 import com.xodid.xolar.solarpanel.domain.SolarPanel;
+import com.xodid.xolar.solarpanel.dto.MessageResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +20,7 @@ public class EmergencyService {
     /**
      * 비상 버튼을 눌렀을 때, 해당 패널의 Device Shadow로 메세지를 게시하는 메서드
      */
-    public String publishToShadow(Long panelId, EmergencyStatus emergencyStatus) throws IOException {
+    public MessageResponseDto publishToShadow(Long panelId, EmergencyStatus emergencyStatus) throws IOException {
         // 패널 Id를 이용해 해당 패널의 정보 조회 -> 패널의 고유 번호 가져오기
         SolarPanel panel = solarPanelService.findById(panelId);
         String panelNumber = panel.getPanelCode();
@@ -35,8 +38,6 @@ public class EmergencyService {
             panel.setImageNumber(2);
         }
 
-        return emergencyStatus.getTitle() + "버튼이 눌렸습니다.";
+        return new MessageResponseDto(emergencyStatus.getTitle() + "버튼이 눌렸습니다.");
     }
-
-
 }
